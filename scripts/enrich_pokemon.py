@@ -12,7 +12,7 @@ def enrich_all_pokemon():
     with open("data/pokemon_raw.json") as pokemon_json_file, open("data/thresholds.json") as stat_thresholds:
         pokemon_raw_dict = json.load(pokemon_json_file)
         stat_thresholds_dict = json.load(stat_thresholds)
-        for pokemon in pokemon_raw_dict[:1]:
+        for pokemon in pokemon_raw_dict:
             response = summarize_flavour_texts(
                 client=anthropic_client,
                 pokemon_name=pokemon["name"],
@@ -26,6 +26,7 @@ def enrich_all_pokemon():
             pokemon["stat_traits"] = stat_traits
 
             results.append(pokemon)
+            print(f"✓ {pokemon["name"]}")
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_PATH, "w") as f:
