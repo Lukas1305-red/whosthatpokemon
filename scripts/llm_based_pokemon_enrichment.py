@@ -1,12 +1,6 @@
-import json
-from pathlib import Path
-
 from anthropic import Anthropic
 
-from dependencies import anthropic_client
 from prompts import SUMMARIZE_FLAVOR_TEXTS_SYSTEM_PROMPT
-
-OUTPUT_PATH = Path("data/pokemon.json")
 
 
 def summarize_flavour_texts(
@@ -26,30 +20,3 @@ def summarize_flavour_texts(
         ],
     )
     return response.content[0].text
-
-
-# TODO: Move this to another script - should be self-contained as we add different enrichement steps
-def summarize_flavour_texts_for_all_pokemon():
-    results = []
-    with open("data/pokemon_raw.json") as pokemon_json_file:
-        pokemon_raw_dict = json.load(pokemon_json_file)
-        for pokemon in pokemon_raw_dict:
-            response = summarize_flavour_texts(
-                client=anthropic_client,
-                pokemon_name=pokemon["name"],
-                flavour_texts=pokemon["flavor_texts"],
-            )
-
-            pokemon.pop("flavor_texts")
-            pokemon["flavor_text"] = response
-
-            results.append(pokemon)
-
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUTPUT_PATH, "w") as f:
-        f.write(json.dumps(results, indent=2, ensure_ascii=False))
-        print(f"\n✓ saved {len(results)} pokemon to {OUTPUT_PATH}")
-
-
-if __name__ == "__main__":
-    summarize_flavour_texts_for_all_pokemon()
