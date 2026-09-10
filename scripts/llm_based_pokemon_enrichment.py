@@ -28,11 +28,12 @@ def summarize_flavour_texts(
     return response.content[0].text
 
 
+# TODO: Move this to another script - should be self-contained as we add different enrichement steps
 def summarize_flavour_texts_for_all_pokemon():
     results = []
     with open("data/pokemon_raw.json") as pokemon_json_file:
         pokemon_raw_dict = json.load(pokemon_json_file)
-        for pokemon in pokemon_raw_dict[:3]:
+        for pokemon in pokemon_raw_dict:
             response = summarize_flavour_texts(
                 client=anthropic_client,
                 pokemon_name=pokemon["name"],
