@@ -8,6 +8,7 @@ dependencies = [
     "aiofiles>=25.1.0",
     "anthropic>=1.4.0",
     "httpx>=0.28.1",
+    "numpy>=2.5.3",
     "pydantic-settings>=2.15.0",
 ]
 

@@ -4,6 +4,7 @@ from pathlib import Path
 
 import aiofiles
 import httpx
+import numpy as np
 
 # MARK: - Constants
 BASE_URL = "https://pokeapi.co/api/v2"
@@ -121,6 +122,26 @@ STARTER_IDS = {
 
 
 # MARK: - Helpers
+
+def calculate_stat_thresholds(pokemon_list):
+    stat_names = pokemon_list[0]["stats"].keys()
+
+    thresholds = {}
+
+    for stat in stat_names:
+        values = [
+            pokemon["stats"][stat]
+            for pokemon in pokemon_list
+        ]
+
+        thresholds[stat] = {
+            "low": np.percentile(values, 10),
+            "high": np.percentile(values, 90),
+        }
+
+    return thresholds
+
+
 def clean_text(text: str) -> str:
     return text.replace("\n", " ").replace("\f", " ").strip()
 
@@ -312,6 +333,10 @@ async def fetch_all_pokemon():
     results.sort(key=lambda x: x["id"])
 
     await create_and_write_to_file(results)
+    print(f"\n✓ saved {len(results)}/{TOTAL_POKEMON} pokemon to {OUTPUT_PATH}")
+
+    stat_thresholds = calculate_stat_thresholds(results)
+    await create_and_write_to_file(stat_thresholds, output_path=Path("data/thresholds.json"))
 
     if failed:
         print(f"✗ {len(failed)} failed: {sorted(failed)}")
@@ -320,15 +345,15 @@ async def fetch_all_pokemon():
 
 
 # MARK: - create_and_write_to_file
-async def create_and_write_to_file(result):
+async def create_and_write_to_file(result, output_path=OUTPUT_PATH):
 
-    OUTPUT_PATH.parent.mkdir(
+    output_path.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
 
     async with aiofiles.open(
-        OUTPUT_PATH,
+        output_path,
         "w",
     ) as f:
         await f.write(
@@ -338,8 +363,6 @@ async def create_and_write_to_file(result):
                 ensure_ascii=False,
             )
         )
-
-    print(f"\n✓ saved {len(result)}/{TOTAL_POKEMON} pokemon to {OUTPUT_PATH}")
 
 
 # MARK: - main
