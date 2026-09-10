@@ -1,10 +1,13 @@
-.PHONY: install fetch
+.PHONY: install fetch summarize lint
 
 install:
 	uv sync
 
 fetch:
-	uv run python scripts/fetch_pokemon.py
+	PYTHONPATH=. uv run python scripts/fetch_pokemon.py
+
+summarize:
+	PYTHONPATH=. uv run python scripts/summarize_flavour_texts.py
 
 lint:
 	uv run pre-commit run --all-files
