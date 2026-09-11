@@ -1,3 +1,6 @@
+from dependencies import embedding_client
+
+
 def parse_pokemon_to_document(pokemon: dict) -> str:
 
     def construct_stat_trait_string() -> str:
@@ -15,4 +18,15 @@ def parse_pokemon_to_document(pokemon: dict) -> str:
     ]
 
     return "\n\n".join(part for part in parts if part)
-    
+
+def embed_document(document: str) -> list[float]:
+    response = embedding_client.embed(
+      texts=[document],
+      model="embed-v4.0",
+      input_type="search_document",
+      output_dimension=1024,
+      embedding_types=["float"],
+    )
+
+    return response.embeddings.float[0]
+
