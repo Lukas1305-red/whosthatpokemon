@@ -123,16 +123,14 @@ STARTER_IDS = {
 
 # MARK: - Helpers
 
+
 def calculate_stat_thresholds(pokemon_list):
     stat_names = pokemon_list[0]["stats"].keys()
 
     thresholds = {}
 
     for stat in stat_names:
-        values = [
-            pokemon["stats"][stat]
-            for pokemon in pokemon_list
-        ]
+        values = [pokemon["stats"][stat] for pokemon in pokemon_list]
 
         thresholds[stat] = {
             "low": np.percentile(values, 10),
@@ -336,7 +334,9 @@ async def fetch_all_pokemon():
     print(f"\n✓ saved {len(results)}/{TOTAL_POKEMON} pokemon to {OUTPUT_PATH}")
 
     stat_thresholds = calculate_stat_thresholds(results)
-    await create_and_write_to_file(stat_thresholds, output_path=Path("data/thresholds.json"))
+    await create_and_write_to_file(
+        stat_thresholds, output_path=Path("data/thresholds.json")
+    )
 
     if failed:
         print(f"✗ {len(failed)} failed: {sorted(failed)}")
