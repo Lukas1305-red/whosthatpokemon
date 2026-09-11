@@ -16,3 +16,6 @@ pipeline: fetch enrich populate
 
 lint:
 	uv run pre-commit run --all-files
+
+test:
+	PYTHONPATH=. uv run python -m pytest
