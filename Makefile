@@ -21,4 +21,4 @@ test:
 	PYTHONPATH=. uv run python -m pytest -s
 
 server:
-	PYTHONPATH=. uv run uvicorn api.main:app --reload
+	uv run uvicorn server.main:app --reload
