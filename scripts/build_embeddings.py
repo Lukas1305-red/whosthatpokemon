@@ -1,3 +1,4 @@
+from config import settings
 from dependencies import embedding_client
 
 
@@ -23,9 +24,9 @@ def parse_pokemon_to_document(pokemon: dict) -> str:
 def embed_documents(documents: list[str]) -> list[list[float]]:
     response = embedding_client.embed(
         texts=documents,
-        model="embed-v4.0",
+        model=settings.cohere_embedding_model,
         input_type="search_document",
-        output_dimension=1024,
+        output_dimension=settings.cohere_embedding_dimension,
         embedding_types=["float"],
     )
 
