@@ -1,4 +1,4 @@
-.PHONY: install fetch enrich populate pipeline lint
+.PHONY: install fetch enrich populate pipeline lint server
 
 install:
 	uv sync
@@ -19,3 +19,6 @@ lint:
 
 test:
 	PYTHONPATH=. uv run python -m pytest -s
+
+server:
+	PYTHONPATH=. uv run uvicorn api.main:app --reload
