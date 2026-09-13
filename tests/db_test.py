@@ -18,8 +18,10 @@ def test_pokemon_database():
     assert len(results["documents"]) == 5
     assert len(results["metadatas"]) == 5
 
+
 def test_chroma_is_alive():
     assert chroma_db_client.heartbeat() is not None
+
 
 def test_chroma_can_query():
     collection = chroma_db_client.get_collection("pokemon")
@@ -39,4 +41,3 @@ def test_chroma_can_query():
 
     assert len(results["ids"]) == 1
     assert len(results["ids"][0]) == 1
-    
