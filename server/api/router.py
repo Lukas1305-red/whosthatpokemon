@@ -1,5 +1,6 @@
-from api.routes.pokemon import pokemon_router
 from fastapi import APIRouter
+
+from server.api.routes.pokemon import pokemon_router
 
 router = APIRouter()
 

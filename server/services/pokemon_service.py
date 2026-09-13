@@ -1,7 +1,6 @@
-from repositories.pokemon_repository import PokemonRepository
-
 from config import settings
 from dependencies import embedding_client
+from server.repositories.pokemon_repository import PokemonRepository
 
 
 class PokemonService:
@@ -17,4 +16,4 @@ class PokemonService:
             embedding_types=["float"],
         )
 
-        return self.repo.search([embedded_query])
+        return self.repo.search(embedded_query.embeddings.float[0])

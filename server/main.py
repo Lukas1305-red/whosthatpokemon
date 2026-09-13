@@ -1,5 +1,6 @@
-from api.router import router as api_router
 from fastapi import FastAPI
+
+from server.api.router import router as api_router
 
 app = FastAPI(
     title="Pokémon Finder for Jobs",
