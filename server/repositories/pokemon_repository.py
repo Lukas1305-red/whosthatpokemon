@@ -1,8 +1,9 @@
 from chromadb import QueryResult
+from chromadb.api import ClientAPI
 
 
 class PokemonRepository:
-    def __init__(self, chroma_client):
+    def __init__(self, chroma_client: ClientAPI):
         self.chroma_client = chroma_client
 
     def search(self, embedding: list[float], top_k: int = 5) -> QueryResult:
