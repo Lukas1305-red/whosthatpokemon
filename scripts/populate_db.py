@@ -8,12 +8,13 @@ from dependencies import chroma_db_client
 COLLECTION_NAME = "pokemon"
 POKEMON_SOURCE_PATH = "data/pokemon_enriched.json"
 
-BATCH_SIZE = 20
+BATCH_SIZE = 5
 
 
 def populate_db():
     def get_metadata_from_pokemon(pokemon: dict) -> dict:
         return {
+            "name": pokemon["name"].capitalize(),
             "types": pokemon["types"],
             "height": pokemon["height"],
             "weight": pokemon["weight"],
