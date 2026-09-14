@@ -1,6 +1,7 @@
 from types import SimpleNamespace
 
 from cohere.core.api_error import ApiError
+from fastapi import HTTPException
 
 import server.services.pokemon_service as pokemon_service_module
 from server.services.pokemon_service import PokemonService
@@ -47,7 +48,8 @@ def test_search_pokemon_reranks_vector_candidates(monkeypatch):
         "patient and careful", top_k=2
     )
 
-    assert [result.name for result in results] == ["Squirtle", "Bulbasaur"]
+    assert [result.name for result in results.pokemon] == ["Squirtle", "Bulbasaur"]
+    assert results.retrieval.reranked is True
 
 
 def test_search_pokemon_falls_back_to_raw_order_when_reranking_fails(monkeypatch):
@@ -63,4 +65,26 @@ def test_search_pokemon_falls_back_to_raw_order_when_reranking_fails(monkeypatch
         "patient and careful", top_k=2
     )
 
-    assert [result.name for result in results] == ["Bulbasaur", "Charmander"]
+    assert [result.name for result in results.pokemon] == ["Bulbasaur", "Charmander"]
+    assert results.retrieval.reranked is False
+    assert results.retrieval.rerank_unavailable_reason == "rate_limited"
+
+
+def test_search_pokemon_exposes_rerank_retry_after_when_locally_limited(monkeypatch):
+    def rate_limit_reranking():
+        raise HTTPException(status_code=429, headers={"Retry-After": "42"})
+
+    monkeypatch.setattr(pokemon_service_module, "embedding_client", FakeCohereClient())
+    monkeypatch.setattr(
+        pokemon_service_module,
+        "enforce_cohere_rerank_rate_limit",
+        rate_limit_reranking,
+    )
+
+    result = PokemonService(FakeRepository()).search_pokemon(
+        "patient and careful", top_k=2
+    )
+
+    assert result.retrieval.reranked is False
+    assert result.retrieval.rerank_unavailable_reason == "rate_limited"
+    assert result.retrieval.retry_after_seconds == 42

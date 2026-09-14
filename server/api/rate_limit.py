@@ -1,9 +1,3 @@
-"""In-memory request limiting for public API routes.
-
-This limiter is intentionally process-local. Use a shared store such as Redis when
-the application runs with multiple workers or replicas.
-"""
-
 import math
 import time
 from collections import defaultdict, deque
@@ -54,6 +48,16 @@ search_rate_limiter = SlidingWindowRateLimiter(
     window_seconds=settings.search_rate_limit_window_seconds,
 )
 
+cohere_rerank_rate_limiter = SlidingWindowRateLimiter(
+    max_requests=settings.cohere_rerank_limit_requests,
+    window_seconds=settings.cohere_rerank_limit_window_seconds,
+)
+
+cohere_embed_rate_limiter = SlidingWindowRateLimiter(
+    max_requests=settings.cohere_embed_limit_requests,
+    window_seconds=settings.cohere_embed_limit_window_seconds,
+)
+
 
 def enforce_search_rate_limit(request: Request) -> None:
     client_host = request.client.host if request.client else "unknown"
@@ -62,5 +66,25 @@ def enforce_search_rate_limit(request: Request) -> None:
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             detail="Too many search requests. Please try again shortly.",
+            headers={"Retry-After": str(retry_after)},
+        )
+
+
+def enforce_cohere_rerank_rate_limit() -> None:
+    retry_after = cohere_rerank_rate_limiter.retry_after_seconds("rerank")
+    if retry_after is not None:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many rerank requests. Please try again shortly.",
+            headers={"Retry-After": str(retry_after)},
+        )
+
+
+def enforce_cohere_embed_rate_limit() -> None:
+    retry_after = cohere_embed_rate_limiter.retry_after_seconds("embed")
+    if retry_after is not None:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many embed requests. Please try again shortly.",
             headers={"Retry-After": str(retry_after)},
         )

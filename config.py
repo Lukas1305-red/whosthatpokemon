@@ -10,6 +10,10 @@ class Settings(BaseSettings):
     pokemon_rerank_candidates: int = 25
     search_rate_limit_requests: int = 10
     search_rate_limit_window_seconds: int = 60
+    cohere_rerank_limit_requests: int = 10
+    cohere_rerank_limit_window_seconds: int = 60
+    cohere_embed_limit_requests: int = 2000
+    cohere_embed_limit_window_seconds: int = 60
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
