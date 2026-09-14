@@ -1,5 +1,7 @@
 .PHONY: install fetch enrich populate pipeline lint test evaluate server
 
+EVAL_SUITE ?= retrieval
+
 install:
 	uv sync
 
@@ -21,7 +23,7 @@ test:
 	PYTHONPATH=. uv run python -m pytest -s
 
 evaluate:
-	PYTHONPATH=. uv run python scripts/evaluate_retrieval.py $(EVAL_ARGS)
+	PYTHONPATH=. uv run python scripts/evaluate_$(EVAL_SUITE).py $(EVAL_ARGS)
 
 server:
 	uv run uvicorn server.main:app --reload

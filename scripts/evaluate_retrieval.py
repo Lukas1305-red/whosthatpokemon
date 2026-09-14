@@ -162,6 +162,7 @@ def evaluate_rerank_strategy(
     reranker: Callable[[str, list[str], int], list[tuple[int, float]]],
     cases: list[dict],
     top_k: int,
+    candidate_count: int,
     vector_retriever: CachedVectorRetriever,
     formatter_cache: CachedQueryFormatter,
     cohere_requests: CohereRequestExecutor,
@@ -172,7 +173,7 @@ def evaluate_rerank_strategy(
             formatter, case["query"]
         )
         vector_result = vector_retriever.retrieve(formatted_query)
-        candidates = vector_result.candidates
+        candidates = vector_result.candidates[:candidate_count]
         rerank_latency_seconds = 0.0
 
         def rerank_candidates():
@@ -223,7 +224,7 @@ def evaluate_rerank_strategy(
     return {
         "strategy": name,
         "top_k": top_k,
-        "candidate_count": vector_retriever.candidate_count,
+        "candidate_count": candidate_count,
         "metrics": metrics,
         "cases": rows,
     }
@@ -353,6 +354,7 @@ def main() -> None:
                     reranker,
                     cases,
                     args.top_k,
+                    args.rerank_candidates,
                     vector_retriever,
                     formatter_cache,
                     cohere_requests,
