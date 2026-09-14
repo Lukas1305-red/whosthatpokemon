@@ -1,4 +1,12 @@
-from evaluation.metrics import aggregate_metrics, ndcg, reciprocal_rank
+import pytest
+
+from evaluation.metrics import (
+    aggregate_metrics,
+    average_latency_seconds,
+    latency_percentile_seconds,
+    ndcg,
+    reciprocal_rank,
+)
 
 
 def test_reciprocal_rank_uses_first_relevant_result():
@@ -24,3 +32,16 @@ def test_aggregate_metrics():
         "ndcg_at_5": 0.5,
         "mrr": 0.5,
     }
+
+
+def test_average_latency_seconds():
+    assert average_latency_seconds(
+        [{"latency_seconds": 0.2}, {"latency_seconds": 0.4}]
+    ) == pytest.approx(0.3)
+
+
+def test_latency_percentile_seconds_uses_linear_interpolation():
+    rows = [{"latency_seconds": value} for value in [0.1, 0.2, 0.3, 0.4]]
+
+    assert latency_percentile_seconds(rows, 0.5) == pytest.approx(0.25)
+    assert latency_percentile_seconds(rows, 0.95) == pytest.approx(0.385)
