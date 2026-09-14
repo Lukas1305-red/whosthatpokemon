@@ -1,4 +1,4 @@
-.PHONY: install fetch enrich populate pipeline lint test evaluate server
+.PHONY: install fetch enrich populate pipeline lint test evaluate server client dev
 
 EVAL_SUITE ?= retrieval
 
@@ -27,3 +27,12 @@ evaluate:
 
 server:
 	uv run uvicorn server.main:app --reload
+
+client:
+	cd client && bun dev
+
+dev:
+	@trap 'kill 0' INT TERM EXIT; \
+  $(MAKE) server & \
+  $(MAKE) client & \
+  wait
