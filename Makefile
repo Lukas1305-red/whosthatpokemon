@@ -1,4 +1,4 @@
-.PHONY: install fetch enrich populate pipeline lint test evaluate server client dev
+.PHONY: install fetch enrich populate pipeline lint python-lint client-lint test evaluate server client dev
 
 EVAL_SUITE ?= retrieval
 
@@ -16,8 +16,15 @@ populate:
 
 pipeline: fetch enrich populate
 
-lint:
-	uv run pre-commit run --all-files
+lint: 
+	python-lint client-lint
+
+python-lint:
+	uv run pre-commit run ruff-check --all-files
+	uv run pre-commit run ruff-format --all-files
+
+client-lint:
+	cd client && bun run lint
 
 test:
 	PYTHONPATH=. uv run python -m pytest -s
