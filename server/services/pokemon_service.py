@@ -1,23 +1,32 @@
+from collections.abc import Callable
+
 from config import settings
 from dependencies import embedding_client
 from server.api.schemas.pokemon import PokemonSearchResult
 from server.repositories.pokemon_repository import PokemonRepository
+from server.services.query_formatter import make_query_formatter
 
 
 class PokemonService:
-    def __init__(self, repo: PokemonRepository):
+    def __init__(
+        self,
+        repo: PokemonRepository,
+        query_formatter: Callable[[str], str] | None = None,
+    ):
         self.repo = repo
+        self.query_formatter = make_query_formatter(query_formatter)
 
-    def search_pokemon(self, query: str) -> list[PokemonSearchResult]:
+    def search_pokemon(self, query: str, top_k: int = 5) -> list[PokemonSearchResult]:
+        formatted_query = self.query_formatter(query)
         embedded_query = embedding_client.embed(
-            texts=[query],
+            texts=[formatted_query],
             model=settings.cohere_embedding_model,
             input_type="search_query",
             output_dimension=settings.cohere_embedding_dimension,
             embedding_types=["float"],
         )
 
-        result = self.repo.search(embedded_query.embeddings.float[0])
+        result = self.repo.search(embedded_query.embeddings.float[0], top_k=top_k)
         return [
             PokemonSearchResult(
                 id=id_,
