@@ -3,7 +3,7 @@ import json
 import os
 from pathlib import Path
 
-os.environ.setdefault("MPLCONFIGDIR", str(Path("data/.matplotlib").resolve()))
+os.environ.setdefault("MPLCONFIGDIR", str(Path("evaluation/.matplotlib").resolve()))
 
 import matplotlib
 
@@ -14,15 +14,13 @@ import matplotlib.pyplot as plt
 from dependencies import chroma_db_client, embedding_client
 from evaluation.cohere_requests import CohereRequestExecutor
 from evaluation.rerankers import CohereReranker
-from scripts.evaluate_retrieval import (
-    CachedQueryFormatter,
+from evaluation.run_retrieval import (
     CachedVectorRetriever,
     evaluate_rerank_strategy,
     evaluate_vector_strategy,
     load_cases,
 )
 from server.repositories.pokemon_repository import PokemonRepository
-from server.services.query_formatter import identity_query_formatter
 
 DEFAULT_CANDIDATE_POOLS = (10, 25, 50, 100)
 
@@ -139,7 +137,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--cases",
         type=Path,
-        default=Path("tests/fixtures/rag_eval_cases.json"),
+        default=Path("evaluation/cases.json"),
     )
     parser.add_argument("--case-limit", type=int)
     parser.add_argument("--top-k", type=int, default=5)
@@ -155,12 +153,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("data/eval_reports/candidate-pool-sweep.json"),
+        default=Path("evaluation/results/candidate-pool-sweep.json"),
     )
     parser.add_argument(
         "--chart",
         type=Path,
-        default=Path("data/eval_reports/candidate-pool-sweep.png"),
+        default=Path("evaluation/results/candidate-pool-sweep.png"),
     )
     return parser.parse_args()
 
@@ -191,7 +189,6 @@ def main() -> None:
         max(candidate_pools),
         cohere_requests,
     )
-    formatter_cache = CachedQueryFormatter()
     reranker = CohereReranker(embedding_client, model=args.rerank_model)
 
     print(
@@ -199,12 +196,9 @@ def main() -> None:
         f"{candidate_pools} at {args.cohere_requests_per_minute:g} Cohere requests/minute."
     )
     baseline = evaluate_vector_strategy(
-        "raw",
-        identity_query_formatter,
         cases,
         args.top_k,
         vector_retriever,
-        formatter_cache,
     )
 
     candidate_pool_reports = []
@@ -212,14 +206,11 @@ def main() -> None:
         print(f"Reranking pool {candidate_count} ({index}/{len(candidate_pools)})")
         candidate_pool_reports.append(
             evaluate_rerank_strategy(
-                f"rerank_{candidate_count}",
-                identity_query_formatter,
                 reranker,
                 cases,
                 args.top_k,
                 candidate_count,
                 vector_retriever,
-                formatter_cache,
                 cohere_requests,
             )
         )

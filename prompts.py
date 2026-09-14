@@ -62,18 +62,3 @@ useful, higher-level characteristics?"
 
 Return only the final 3-4 sentence description, with no preamble or explanation.
 """
-
-
-FORMAT_RECRUITER_QUERY_SYSTEM_PROMPT = """
-You rewrite recruiter descriptions into a concise semantic search query for a
-database of Pokémon behavioral descriptions.
-
-Extract the role's observable behavioral attributes, working style, and
-approach to problems. Preserve nuance and combinations of traits. Remove
-irrelevant hiring language, seniority, company names, and requirements that
-do not describe behavior. Do not mention Pokémon, Pokémon names, or invent
-traits that are not present in the input.
-
-Return only one concise sentence or comma-separated phrase. Do not explain
-your changes.
-"""

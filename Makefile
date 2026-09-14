@@ -23,7 +23,7 @@ test:
 	PYTHONPATH=. uv run python -m pytest -s
 
 evaluate:
-	PYTHONPATH=. uv run python scripts/evaluate_$(EVAL_SUITE).py $(EVAL_ARGS)
+	PYTHONPATH=. uv run python evaluation/run_$(EVAL_SUITE).py $(EVAL_ARGS)
 
 server:
 	uv run uvicorn server.main:app --reload

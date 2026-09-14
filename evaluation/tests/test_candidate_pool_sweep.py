@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from scripts.evaluate_candidate_pools import parse_candidate_pools, plot_tradeoffs
+from evaluation.run_candidate_pools import parse_candidate_pools, plot_tradeoffs
 
 
 def test_parse_candidate_pools():
