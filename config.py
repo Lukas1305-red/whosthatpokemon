@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     cohere_embedding_dimension: int = 1024
     cohere_rerank_model: str = "rerank-v4.0-pro"
     pokemon_rerank_candidates: int = 25
+    search_rate_limit_requests: int = 10
+    search_rate_limit_window_seconds: int = 60
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
