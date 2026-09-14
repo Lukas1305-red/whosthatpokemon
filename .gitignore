@@ -219,3 +219,7 @@ __marimo__/
 
 data/*
 !data/.gitkeep
+
+# Local evaluation outputs and Matplotlib cache.
+evaluation/results/
+evaluation/.matplotlib/

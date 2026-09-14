@@ -8,7 +8,7 @@ class PokemonService:
     def __init__(self, repo: PokemonRepository):
         self.repo = repo
 
-    def search_pokemon(self, query: str) -> list[PokemonSearchResult]:
+    def search_pokemon(self, query: str, top_k: int = 5) -> list[PokemonSearchResult]:
         embedded_query = embedding_client.embed(
             texts=[query],
             model=settings.cohere_embedding_model,
@@ -17,7 +17,7 @@ class PokemonService:
             embedding_types=["float"],
         )
 
-        result = self.repo.search(embedded_query.embeddings.float[0])
+        result = self.repo.search(embedded_query.embeddings.float[0], top_k=top_k)
         return [
             PokemonSearchResult(
                 id=id_,
