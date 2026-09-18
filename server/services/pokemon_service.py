@@ -90,3 +90,6 @@ class PokemonService:
             ],
             retrieval=retrieval,
         )
+
+    def get_pokemon_by_id(self, pokemon_id: str) -> str | None:
+        return self.repo.get_by_id(pokemon_id)

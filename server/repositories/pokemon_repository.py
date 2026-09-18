@@ -14,9 +14,9 @@ class PokemonRepository:
             n_results=top_k,
         )
 
-    def get_by_id(self, id: str) -> str | None:
+    def get_by_id(self, pokemon_id: str) -> str | None:
         collection = self.chroma_client.get_collection("pokemon")
 
-        result = collection.get(ids=[id], include=["documents"])
+        result = collection.get(ids=[pokemon_id], include=["documents"])
 
         return result["documents"][0] if result["ids"] else None

@@ -45,3 +45,12 @@ class SearchResult(BaseModel):
 class SearchResponse(BaseModel):
     pokemon: list[PokemonSearchResult]
     retrieval: Retrieval
+
+
+class ExplainRequest(BaseModel):
+    searchRequest: SearchRequest
+    pokemon_id: str
+
+
+class ExplainResponse(BaseModel):
+    explanation: str
