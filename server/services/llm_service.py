@@ -10,7 +10,6 @@ class LLMService:
     def explain_pokemon_match(
         self,
         query: str,
-        pokemon_name: str,
         pokemon_document: str,
     ) -> str:
         response = self.llm_client.messages.create(
@@ -22,7 +21,6 @@ class LLMService:
                     "role": "user",
                     "content": (
                         f"<search_query>\n{query}\n</search_query>\n\n"
-                        f"<pokemon_name>{pokemon_name}</pokemon_name>\n\n"
                         f"<pokemon_document>\n{pokemon_document}\n</pokemon_document>"
                     ),
                 }

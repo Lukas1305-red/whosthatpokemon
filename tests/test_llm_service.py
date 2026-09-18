@@ -21,8 +21,7 @@ def test_explain_pokemon_match_sends_the_query_and_document_to_anthropic():
 
     explanation = LLMService(client).explain_pokemon_match(
         query="Characteristics: calm and protective.",
-        pokemon_name="Lapras",
-        pokemon_document="Lapras is gentle and seeks companionship.",
+        pokemon_document="Lapras\n\nCharacteristics: gentle and seeks companionship.",
     )
 
     assert explanation == "Lapras is a gentle match."
@@ -35,8 +34,7 @@ def test_explain_pokemon_match_sends_the_query_and_document_to_anthropic():
                 "role": "user",
                 "content": (
                     "<search_query>\nCharacteristics: calm and protective.\n</search_query>\n\n"
-                    "<pokemon_name>Lapras</pokemon_name>\n\n"
-                    "<pokemon_document>\nLapras is gentle and seeks companionship.\n"
+                    "<pokemon_document>\nLapras\n\nCharacteristics: gentle and seeks companionship.\n"
                     "</pokemon_document>"
                 ),
             }
