@@ -28,7 +28,7 @@ def test_explain_pokemon_match_sends_the_query_and_document_to_anthropic():
     assert explanation == "Lapras is a gentle match."
     assert client.request == {
         "model": "claude-haiku-4-5-20251001",
-        "max_tokens": 180,
+        "max_tokens": 200,
         "system": EXPLAIN_POKEMON_MATCH_SYSTEM_PROMPT,
         "messages": [
             {
