@@ -88,3 +88,14 @@ def test_search_pokemon_exposes_rerank_retry_after_when_locally_limited(monkeypa
     assert result.retrieval.reranked is False
     assert result.retrieval.rerank_unavailable_reason == "rate_limited"
     assert result.retrieval.retry_after_seconds == 42
+
+
+def test_get_pokemon_by_id_returns_the_document():
+    class Repository:
+        def get_by_id(self, pokemon_id):
+            assert pokemon_id == "25"
+            return "Pikachu demonstrates curiosity."
+
+    document = PokemonService(Repository()).get_pokemon_by_id("25")
+
+    assert document == "Pikachu demonstrates curiosity."
