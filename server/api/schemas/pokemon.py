@@ -1,10 +1,28 @@
+from enum import Enum
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator
+
+
+class PokemonTrait(Enum):
+    RELIABLE = 1
+    INDEPENDENT = 2
+    CALM = 3
+    CURIOUS = 4
+    PROTECTIVE = 5
+    ADAPTABLE = 6
 
 
 class SearchRequest(BaseModel):
-    query: str
+    traits: list[PokemonTrait] = Field(min_length=1, max_length=4)
+    note: str | None = Field(default=None, max_length=150)
+
+    @field_validator("traits")
+    @classmethod
+    def traits_must_be_unique(cls, traits: list[PokemonTrait]) -> list[PokemonTrait]:
+        if len(traits) != len(set(traits)):
+            raise ValueError("traits must not contain duplicates")
+        return traits
 
 
 class PokemonSearchResult(BaseModel):

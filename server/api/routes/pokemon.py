@@ -15,8 +15,9 @@ async def search_pokemon(
     service=Depends(get_pokemon_service),  # noqa: B008
 ):
     enforce_search_rate_limit(http_request)
-    query = request.query
-    result = service.search_pokemon(query)
+    note = request.note
+    # TODO: Change this to using
+    result = service.search_pokemon(note)
     if result.retrieval.retry_after_seconds is not None:
         response.headers["Retry-After"] = str(result.retrieval.retry_after_seconds)
     return SearchResponse(pokemon=result.pokemon, retrieval=result.retrieval)
