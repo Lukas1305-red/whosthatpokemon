@@ -1,302 +1,86 @@
 [
   {
-    "id": "analytical-researcher",
-    "traits": ["INDEPENDENT", "CALM", "CURIOUS"],
-    "note": "A researcher who is patient, analytical, curious, and comfortable investigating complex problems independently.",
-    "relevance": {"slowking": 3, "alakazam": 3, "oranguru": 2, "noctowl": 2}
+    "id": "calm-companion",
+    "traits": ["CALM"],
+    "note": "A gentle, relaxed companion for quiet time.",
+    "relevance": {"xatu": 3, "lapras": 3, "quagsire": 2, "tranquill": 2, "bulbasaur": 2, "wartortle": 2}
   },
   {
-    "id": "caregiver",
-    "traits": ["CALM", "PROTECTIVE"],
-    "note": "A compassionate healthcare worker who notices when people are struggling and provides persistent, attentive support.",
-    "relevance": {"blissey": 3, "audino": 3, "gardevoir": 2, "chansey": 2}
-  },
-  {
-    "id": "security-monitoring",
-    "traits": ["CALM", "PROTECTIVE"],
-    "note": "A calm security professional who observes carefully, waits patiently, detects threats, and acts decisively when necessary.",
-    "relevance": {"umbreon": 3, "absol": 3, "noctowl": 2, "gardevoir": 2}
-  },
-  {
-    "id": "adaptive-operator",
-    "traits": ["INDEPENDENT", "ADAPTABLE"],
-    "note": "An adaptable operator who can work independently in changing environments and adjust their approach when conditions shift.",
-    "relevance": {"eevee": 3, "sneasler": 2, "zoroark": 2, "rotom": 2}
-  },
-  {
-    "id": "technical-specialist",
-    "traits": ["CALM", "CURIOUS"],
-    "note": "A precise technical specialist who solves problems methodically, uses tools skillfully, and prefers technique over brute force.",
-    "relevance": {"greninja": 3, "alakazam": 3, "porygon": 2, "noctowl": 2}
-  },
-  {
-    "id": "coordinated-team",
-    "traits": ["RELIABLE", "ADAPTABLE"],
-    "note": "A disciplined team lead who coordinates people into clear roles, communicates effectively, and adapts execution to changing circumstances.",
-    "relevance": {"falinks": 3, "durant": 3, "weavile": 2, "oranguru": 2}
-  },
-  {
-    "id": "persistent-competitor",
+    "id": "reliable-companion",
     "traits": ["RELIABLE"],
-    "note": "A highly persistent and competitive person who responds to setbacks by increasing their effort and pursuing the objective intensely.",
-    "relevance": {"scizor": 3, "primeape": 2, "machamp": 2, "weavile": 2}
+    "note": "A dependable companion with a steady presence.",
+    "relevance": {"ampharos": 3, "stoutland": 3, "hoothoot": 3, "tranquill": 3, "cyclizar": 2, "dragonite": 2, "growlithe": 2}
   },
   {
-    "id": "creative-protector",
-    "traits": ["CURIOUS", "PROTECTIVE"],
-    "note": "A resourceful and protective problem solver who uses creativity and unconventional tactics to keep their team safe.",
-    "relevance": {"zoroark": 3, "gardevoir": 3, "absol": 2, "lucario": 2}
+    "id": "independent-companion",
+    "traits": ["INDEPENDENT"],
+    "note": "A companion comfortable spending time alone and doing its own thing.",
+    "relevance": {"bulbasaur": 3, "skiddo": 3, "piplup": 3, "simipour": 2, "smoliv": 2, "fennekin": 2, "mew": 2, "porygon2": 2, "moltres": 2}
   },
   {
-    "id": "steady-self-directed-growth",
-    "traits": ["RELIABLE", "INDEPENDENT", "CALM", "ADAPTABLE"],
-    "note": "A patient, self-sustaining person who develops steadily over time without urgency and works in harmony with their environment.",
-    "relevance": {"bulbasaur": 3, "shuckle": 2, "oddish": 1}
-  },
-  {
-    "id": "prepared-precision-executor",
-    "traits": ["RELIABLE", "CALM"],
-    "note": "A disciplined operator who prepares carefully, establishes a stable position, and switches between precise work and decisive high-impact action.",
-    "relevance": {"blastoise": 3, "decidueye": 2, "greninja": 2}
-  },
-  {
-    "id": "systematic-all-conditions-forager",
-    "traits": ["RELIABLE", "INDEPENDENT"],
-    "note": "A methodical and persistent resource gatherer who works effectively in all conditions and optimizes a repeated collection process.",
-    "relevance": {"butterfree": 3, "pelipper": 2, "teddiursa": 1}
-  },
-  {
-    "id": "conflict-averse-navigator",
-    "traits": ["CALM", "RELIABLE", "ADAPTABLE"],
-    "note": "A calm, conflict-averse worker who favors avoidance over confrontation and can navigate reliably from unfamiliar places.",
-    "relevance": {"pidgey": 3, "nidoran-f": 2, "corviknight": 1}
-  },
-  {
-    "id": "vigilant-territory-patrol",
-    "traits": ["RELIABLE", "CURIOUS", "PROTECTIVE"],
-    "note": "A vigilant professional who persistently patrols a large area, detects distant changes precisely, and responds decisively to boundary violations.",
-    "relevance": {"pidgeotto": 3, "patrat": 2, "yanma": 2, "corviknight": 1}
-  },
-  {
-    "id": "continuous-sensory-monitor",
-    "traits": ["RELIABLE", "CURIOUS"],
-    "note": "A team-oriented worker who navigates unfamiliar, low-visibility environments through continuous sensory monitoring and precise spatial awareness.",
-    "relevance": {"zubat": 3, "noctowl": 2, "yanma": 2, "azumarill": 1}
-  },
-  {
-    "id": "synchronized-excavation-team",
-    "traits": ["RELIABLE", "ADAPTABLE"],
-    "note": "A highly synchronized team that coordinates movement continuously, divides work efficiently, and sustains deliberate progress toward a shared objective.",
-    "relevance": {"dugtrio": 3, "falinks": 2, "durant": 2, "weavile": 2}
-  },
-  {
-    "id": "self-directed-mastery",
-    "traits": ["INDEPENDENT", "CURIOUS"],
-    "note": "An independent learner who pursues disciplined self-improvement, deliberately studies multiple approaches, and seeks difficult challenges without external pressure.",
-    "relevance": {"machop": 3, "makuhita": 2, "quaxwell": 2, "rillaboom": 1}
-  },
-  {
-    "id": "resourceful-tool-specialist",
-    "traits": ["INDEPENDENT", "CURIOUS", "PROTECTIVE"],
-    "note": "A discerning and resourceful specialist who develops an individual style with a practical tool, protects important resources, and finds a replacement when necessary.",
-    "relevance": {"farfetchd": 3, "greninja": 2, "bombirdier": 2, "pansear": 1}
-  },
-  {
-    "id": "careful-compassionate-responder",
-    "traits": ["CALM", "PROTECTIVE"],
-    "note": "A compassionate responder who helps injured people, protects valuable resources under pressure, and is generous while remaining discerning about harmful intent.",
-    "relevance": {"chansey": 3, "blissey": 3, "alomomola": 2, "audino": 1}
-  },
-  {
-    "id": "autonomous-rescuer",
-    "traits": ["RELIABLE", "INDEPENDENT", "CALM", "PROTECTIVE"],
-    "note": "A calm, autonomous worker who reliably covers large distances, intervenes to rescue people in distress, and accepts personal effort to protect others.",
-    "relevance": {"dragonite": 3, "gardevoir": 2, "absol": 2, "blissey": 1}
-  },
-  {
-    "id": "real-time-imitation",
-    "traits": ["ADAPTABLE"],
-    "note": "A highly adaptable worker who accurately imitates a task from direct observation but performs less reliably when forced to rely on memory or incomplete detail.",
-    "relevance": {"ditto": 3, "mew": 1, "eevee": 1}
-  },
-  {
-    "id": "stealthy-endurance-operator",
-    "traits": ["CALM", "ADAPTABLE"],
-    "note": "An efficient, adaptable operator who works with stealth and precision, manages fatigue for sustained performance, and favors controlled technique over brute force.",
-    "relevance": {"crobat": 3, "greninja": 2, "liepard": 2, "noctowl": 1}
-  },
-  {
-    "id": "acoustic-team-coordinator",
-    "traits": ["RELIABLE"],
-    "note": "A cooperative team member who uses specialized communication to track colleagues, coordinate sophisticated group work, and respond reliably to leadership.",
-    "relevance": {"houndour": 3, "weavile": 2, "falinks": 2, "luxio": 2}
-  },
-  {
-    "id": "resource-stockpiler",
-    "traits": ["RELIABLE", "INDEPENDENT"],
-    "note": "A resourceful planner who gathers and preserves supplies ahead of scarcity, combines independent production with opportunistic sourcing, and values reliable access to essentials.",
-    "relevance": {"teddiursa": 3, "pachirisu": 2, "shuckle": 2, "delibird": 1}
-  },
-  {
-    "id": "reliable-beacon",
-    "traits": ["RELIABLE"],
-    "note": "A dependable contributor who provides a stable, highly visible signal that helps others communicate, navigate, and orient themselves over long distances.",
-    "relevance": {"ampharos": 3}
-  },
-  {
-    "id": "persistent-resource-distributor",
-    "traits": ["RELIABLE", "PROTECTIVE"],
-    "note": "A reliable, practical helper who persistently gathers and transports resources, then actively shares them with people in need.",
-    "relevance": {"delibird": 3, "blissey": 2, "chansey": 2, "pelipper": 2}
-  },
-  {
-    "id": "patient-environmental-planner",
-    "traits": ["INDEPENDENT", "CALM"],
-    "note": "A self-sufficient strategist who prepares the environment carefully, waits with discipline for the right opportunity, and can sustain a long vigil with few resources.",
-    "relevance": {"trapinch": 3, "spinarak": 2, "umbreon": 1, "barboach": 1}
-  },
-  {
-    "id": "low-visibility-sensing",
-    "traits": ["CALM", "ADAPTABLE"],
-    "note": "A patient, sensor-driven worker who positions themselves strategically in low-visibility conditions, uses subtle signals to detect opportunities, and adapts defensively to hostile environments.",
-    "relevance": {"barboach": 3, "vaporeon": 2, "azumarill": 2, "spinarak": 1}
-  },
-  {
-    "id": "rapid-strategic-adapter",
-    "traits": ["CURIOUS", "ADAPTABLE"],
-    "note": "A highly intelligent problem solver who rapidly changes configuration for new circumstances, uses deliberate misdirection, and combines adaptability with decisive action.",
-    "relevance": {"deoxys-normal": 3, "mew": 2, "eevee": 2, "ogerpon": 1}
-  },
-  {
-    "id": "creative-visual-communicator",
+    "id": "curious-companion",
     "traits": ["CURIOUS"],
-    "note": "A prolific creative communicator who uses individualized visual symbols to express ideas, establish boundaries, and collaborate with others.",
-    "relevance": {"smeargle": 3}
+    "note": "A playful companion excited to explore unfamiliar places.",
+    "relevance": {"pikachu": 3, "zigzagoon": 3, "wailmer": 3, "smoochum": 3, "lickitung": 3, "clobbopus": 2}
   },
   {
-    "id": "experimental-tool-maker",
-    "traits": ["CURIOUS", "ADAPTABLE"],
-    "note": "A resourceful experimenter who repurposes available materials into functional tools, solves practical provisioning problems, and learns through direct action and observation.",
-    "relevance": {"bombirdier": 3, "farfetchd": 2, "pansear": 2, "azurill": 1}
+    "id": "protective-companion",
+    "traits": ["PROTECTIVE"],
+    "note": "A watchful companion that looks out for people it bonds with.",
+    "relevance": {"growlithe": 3, "gardevoir": 3, "kangaskhan": 3, "dragonite": 2, "nidoqueen": 2, "blissey": 2, "espeon": 2, "ralts": 2}
   },
   {
-    "id": "curious-independent-competitor",
-    "traits": ["CURIOUS", "INDEPENDENT"],
-    "note": "A curious, independent person who engages readily with unfamiliar challenges, confronts obstacles directly, and becomes more competitive as difficulty rises.",
-    "relevance": {"litleo": 3, "taillow": 2, "blaziken": 2, "pikachu": 1}
-  },
-  {
-    "id": "curious-with-failsafe",
-    "traits": ["CURIOUS", "ADAPTABLE"],
-    "note": "A curious explorer who engages openly with unfamiliar situations, accepts risk, and uses a practical escape mechanism when threatened.",
-    "relevance": {"cosmog": 3, "pikachu": 1, "ogerpon": 1, "ralts": 1}
-  },
-  {
-    "id": "curious-practical-teammate",
-    "traits": ["CURIOUS", "PROTECTIVE"],
-    "note": "A curious, resourceful teammate who explores unfamiliar things directly, monitors their surroundings, solves immediate practical problems, and helps weakened companions.",
-    "relevance": {"pikachu": 3, "pansear": 2, "litleo": 1, "plusle": 1}
-  },
-  {
-    "id": "hypervigilant-survivor",
-    "traits": ["CURIOUS", "ADAPTABLE"],
-    "note": "A cautious, hypervigilant survivor who continuously monitors the environment, adapts opportunistically to available resources, and thrives in harsh conditions.",
-    "relevance": {"rattata": 3, "nidoran-m": 2, "patrat": 1, "watchog": 1}
-  },
-  {
-    "id": "tactical-adaptive-combatant",
-    "traits": ["ADAPTABLE", "PROTECTIVE"],
-    "note": "A versatile operator who adapts to changing conditions, uses coordinated tactical sequences, shifts between offense and defense, and shares resources with companions.",
-    "relevance": {"sandslash": 3, "squirtle": 2, "blastoise": 1, "crobat": 1}
-  },
-  {
-    "id": "composed-resilient-worker",
-    "traits": ["CALM", "RELIABLE"],
-    "note": "A remarkably composed and resilient worker who remains undisturbed by setbacks, recovers quickly, and operates in stable coordinated rhythms with a group.",
-    "relevance": {"staryu": 3, "quagsire": 1, "bulbasaur": 1}
-  },
-  {
-    "id": "creative-multiuse-problem-solver",
-    "traits": ["CURIOUS", "ADAPTABLE"],
-    "note": "A playful, social, resourceful problem solver who creatively repurposes one capability for movement, practical work, and defense.",
-    "relevance": {"azurill": 3, "bombirdier": 2, "farfetchd": 1, "pikachu": 1}
-  },
-  {
-    "id": "hardy-opportunistic-survivor",
+    "id": "adaptable-companion",
     "traits": ["ADAPTABLE"],
-    "note": "A hardy, adaptable worker who thrives in degraded conditions, makes use of whatever resources are available, and persists tenaciously once committed.",
-    "relevance": {"corphish": 3, "rattata": 2, "weezing": 2, "poochyena": 1}
+    "note": "A companion that adjusts well to new homes and changing routines.",
+    "relevance": {"eevee": 3, "ditto": 3, "shellos": 3, "gastrodon": 3, "wailmer": 2, "corphish": 2}
   },
   {
-    "id": "versatile-discreet-learner",
-    "traits": ["INDEPENDENT", "ADAPTABLE"],
-    "note": "An exceptionally versatile and resourceful learner who acquires a broad range of techniques, works independently, and deliberately avoids unnecessary attention.",
-    "relevance": {"mew": 3, "deoxys-normal": 2, "porygon2": 1, "ditto": 1}
-  },
-  {
-    "id": "autonomous-learning-system",
-    "traits": ["INDEPENDENT", "CURIOUS"],
-    "note": "A self-directed learner who develops beyond initial instructions, retains knowledge across many topics, and sometimes produces unexpected but emergent behavior.",
-    "relevance": {"porygon2": 3, "alakazam": 2, "mew": 1, "ditto": 1}
-  },
-  {
-    "id": "courageous-independent-traveler",
-    "traits": ["INDEPENDENT", "ADAPTABLE"],
-    "note": "A courageous, independent person who confronts difficult challenges directly, maintains resolve after defeat, and travels actively to find better conditions.",
-    "relevance": {"taillow": 3, "machop": 2, "litleo": 2, "blaziken": 1}
-  },
-  {
-    "id": "emotionally-attuned-responder",
+    "id": "calm-protective-companion",
     "traits": ["CALM", "PROTECTIVE"],
-    "note": "A cautious, emotionally attuned teammate who notices others' feelings, mirrors a positive atmosphere, and withdraws from hostile situations.",
-    "relevance": {"ralts": 3, "audino": 2, "lucario": 2, "blissey": 1}
+    "note": "Gentle and reassuring, but ready to keep me safe.",
+    "relevance": {"mabosstiff": 3, "rabsca": 3, "cobalion": 3, "lapras": 3, "dragonite": 3, "growlithe": 2, "gardevoir": 2, "blissey": 2, "sylveon": 2}
   },
   {
-    "id": "vocal-group-leader",
-    "traits": ["RELIABLE"],
-    "note": "A social leader who brings groups together through clear vocal signals, maintains coordination and order, and earns respect from peers.",
-    "relevance": {"politoed": 3, "houndour": 2, "passimian": 2, "rillaboom": 2}
+    "id": "independent-adaptable-companion",
+    "traits": ["INDEPENDENT", "ADAPTABLE"],
+    "note": "Comfortable alone and resilient when plans or surroundings change.",
+    "relevance": {"mew": 3, "eevee": 3, "moltres": 2, "corphish": 2, "swadloon": 2, "prinplup": 1, "skiddo": 1, "simipour": 1}
   },
   {
-    "id": "delegating-standards-leader",
-    "traits": ["RELIABLE", "CALM"],
-    "note": "A deliberate leader who delegates routine work, enforces standards consistently, conserves effort until needed, and acts decisively to preserve group order.",
-    "relevance": {"honchkrow": 3, "bisharp": 2, "falinks": 2, "passimian": 1}
-  },
-  {
-    "id": "role-specialized-team-member",
-    "traits": ["RELIABLE"],
-    "note": "A cooperative team member who fulfills a clearly assigned role, follows established protocols, values group identity, and contributes consistently to collective objectives.",
-    "relevance": {"passimian": 3, "falinks": 2, "durant": 2, "weavile": 2}
-  },
-  {
-    "id": "practice-led-collaborative-leader",
-    "traits": ["RELIABLE"],
-    "note": "A disciplined leader who builds mastery through repetitive practice, refines a craft methodically, and directs effort toward collective well-being.",
-    "relevance": {"rillaboom": 3, "machop": 2, "makuhita": 2, "quaxwell": 2}
-  },
-  {
-    "id": "enthusiastic-supporter",
+    "id": "reliable-protective-companion",
     "traits": ["RELIABLE", "PROTECTIVE"],
-    "note": "An emotionally transparent, loyal teammate who actively encourages partners, celebrates their success, and maintains their own capacity to keep supporting the group.",
-    "relevance": {"plusle": 3, "blissey": 1, "alomomola": 1, "houndour": 1}
+    "note": "A loyal, trustworthy companion I can rely on when things feel uncertain.",
+    "relevance": {"growlithe": 3, "dragonite": 3, "gardevoir": 3, "stoutland": 3, "cyclizar": 2, "drakloak": 2, "ampharos": 1}
   },
   {
-    "id": "proactive-gentle-caregiver",
-    "traits": ["CALM", "PROTECTIVE"],
-    "note": "A consistently supportive caregiver who proactively seeks out people in distress, provides gentle direct help, and naturally becomes a focal point for others.",
-    "relevance": {"alomomola": 3, "blissey": 3, "chansey": 2, "audino": 1}
+    "id": "curious-caring-companion",
+    "traits": ["CURIOUS", "PROTECTIVE"],
+    "note": "Interested in new things while staying attentive to the people around it.",
+    "relevance": {"pikachu": 3, "audino": 2, "growlithe": 2, "riolu": 2, "blissey": 2, "wailmer": 1, "zigzagoon": 1, "sentret": 1}
   },
   {
-    "id": "supportive-group-learner",
+    "id": "low-maintenance-companion",
+    "traits": ["CALM", "INDEPENDENT"],
+    "note": "A low-maintenance companion for a quiet home.",
+    "relevance": {"bulbasaur": 3, "skiddo": 3, "silcoon": 3, "lapras": 2, "piplup": 2, "litten": 2, "wartortle": 1}
+  },
+  {
+    "id": "adventurous-adaptable-companion",
+    "traits": ["CURIOUS", "ADAPTABLE"],
+    "note": "Likes exploring unfamiliar places and can adapt to new environments.",
+    "relevance": {"wailmer": 3, "eevee": 3, "mew": 3, "shellos": 3, "snover": 3, "pikachu": 2, "smoochum": 2, "zigzagoon": 2}
+  },
+  {
+    "id": "steady-guardian-companion",
+    "traits": ["RELIABLE", "CALM", "PROTECTIVE"],
+    "note": "A steady, gentle companion that offers a sense of security.",
+    "relevance": {"dragonite": 3, "growlithe": 3, "nidoqueen": 3, "stoutland": 3, "tranquill": 3, "cyclizar": 2, "blissey": 2, "lapras": 2}
+  },
+  {
+    "id": "self-sufficient-guide-companion",
     "traits": ["RELIABLE", "INDEPENDENT"],
-    "note": "A persistent learner who develops best through collaborative training, values social connection, and remains attached to familiar places and origins.",
-    "relevance": {"dreepy": 3, "rillaboom": 1, "houndour": 1, "passimian": 1}
-  },
-  {
-    "id": "protective-community-guardian",
-    "traits": ["RELIABLE", "PROTECTIVE"],
-    "note": "A protective community member who routinely transports younger dependents to safety, adopts a defensive counter-response under threat, and supports stable group life.",
-    "relevance": {"clodsire": 3, "kangaskhan": 3, "seaking": 2, "gardevoir": 1}
+    "note": "Dependable without needing constant attention.",
+    "relevance": {"bulbasaur": 3, "skiddo": 3, "simipour": 3, "piplup": 3, "smoliv": 3, "ampharos": 2, "hoothoot": 2, "moltres": 2}
   }
 ]
