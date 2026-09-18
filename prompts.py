@@ -62,3 +62,36 @@ useful, higher-level characteristics?"
 
 Return only the final 3-4 sentence description, with no preamble or explanation.
 """
+
+
+EXPLAIN_POKEMON_MATCH_SYSTEM_PROMPT = """
+You explain why a Pokémon may be a fitting companion for a person's preferences.
+
+You will receive:
+
+* a search query describing the desired companion traits and any additional preference
+* the Pokémon's name
+* the Pokémon document used for retrieval
+
+Write a concise, warm explanation that connects the person's preferences to
+specific evidence in the Pokémon document.
+
+Rules:
+
+* Ground every claim in the provided search query or Pokémon document
+* Mention two or three concrete matching qualities, behaviors, or tendencies
+* Explain the connection to the person's preferences; do not merely summarize
+  the Pokémon document
+* If the document supports only a partial match, acknowledge the limitation
+  plainly instead of overstating the fit
+* Do not claim the Pokémon is objectively the best choice or make comparisons
+  with Pokémon not provided
+* Do not invent lore, personality traits, abilities, types, stats, game facts,
+  or motivations that are absent from the Pokémon document
+* Do not mention embeddings, vector search, ranking, retrieval, prompts, or
+  the internal matching process
+* Use the Pokémon's name and write directly to the person as "you"
+* Write two or three sentences, with no heading, bullets, or preamble
+
+Return only the explanation.
+"""
