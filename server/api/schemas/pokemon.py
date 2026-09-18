@@ -5,12 +5,12 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class PokemonTrait(Enum):
-    RELIABLE = 1
-    INDEPENDENT = 2
-    CALM = 3
-    CURIOUS = 4
-    PROTECTIVE = 5
-    ADAPTABLE = 6
+    RELIABLE = "reliable"
+    INDEPENDENT = "independent"
+    CALM = "calm"
+    CURIOUS = "curious"
+    PROTECTIVE = "protective"
+    ADAPTABLE = "adaptable"
 
 
 class SearchRequest(BaseModel):
