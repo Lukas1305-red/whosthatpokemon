@@ -14,6 +14,14 @@ class Settings(BaseSettings):
     cohere_rerank_limit_window_seconds: int = 60
     cohere_embed_limit_requests: int = 2000
     cohere_embed_limit_window_seconds: int = 60
+    explain_rate_limit_requests: int = 3
+    explain_rate_limit_window_seconds: int = 60
+    anthropic_timeout_seconds: float = 15.0
+    anthropic_max_retries: int = 0
+    explain_cache_enabled: bool = True
+    explain_cache_ttl_seconds: int = 86400  # 24 h
+    explain_cache_max_entries: int = 1000
+    explain_prompt_version: str = "v1"
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
