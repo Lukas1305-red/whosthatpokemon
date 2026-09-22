@@ -1,6 +1,8 @@
 from types import SimpleNamespace
 
+import server.services.llm_service as llm_service_module
 from prompts import EXPLAIN_POKEMON_MATCH_SYSTEM_PROMPT
+from server.api.errors import AIProviderUnavailableError
 from server.services.llm_service import LLMService
 
 
@@ -40,3 +42,25 @@ def test_explain_pokemon_match_sends_the_query_and_document_to_anthropic():
             }
         ],
     }
+
+
+def test_explain_pokemon_match_hides_anthropic_failure_details(monkeypatch):
+    class ProviderFailure(Exception):
+        pass
+
+    class FailingClient:
+        def __init__(self):
+            self.messages = self
+
+        def create(self, **kwargs):
+            raise ProviderFailure("provider returned a secret diagnostic")
+
+    monkeypatch.setattr(llm_service_module, "AnthropicError", ProviderFailure)
+
+    try:
+        LLMService(FailingClient()).explain_pokemon_match("calm", "Lapras")
+    except AIProviderUnavailableError as error:
+        assert error.message == "The AI explanation service is temporarily unavailable."
+        assert "secret" not in error.message
+    else:
+        raise AssertionError("Expected a provider failure to be converted safely")

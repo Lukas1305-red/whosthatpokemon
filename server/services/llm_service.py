@@ -1,14 +1,18 @@
 import hashlib
 import json
+import logging
 
-from anthropic import Anthropic
+from anthropic import Anthropic, AnthropicError, RateLimitError
 
 from config import settings
 from prompts import EXPLAIN_POKEMON_MATCH_SYSTEM_PROMPT
+from server.api.errors import AIProviderUnavailableError
 from server.services.explanation_cache import ExplanationCache
 
 EXPLAIN_MODEL = "claude-haiku-4-5-20251001"
 EXPLAIN_MAX_TOKENS = 200
+
+logger = logging.getLogger(__name__)
 
 
 class LLMService:
@@ -34,21 +38,46 @@ class LLMService:
         )
 
     def _generate_explanation(self, query: str, pokemon_document: str) -> str:
-        response = self.llm_client.messages.create(
-            model=EXPLAIN_MODEL,
-            max_tokens=EXPLAIN_MAX_TOKENS,
-            system=EXPLAIN_POKEMON_MATCH_SYSTEM_PROMPT,
-            messages=[
-                {
-                    "role": "user",
-                    "content": (
-                        f"<search_query>\n{query}\n</search_query>\n\n"
-                        f"<pokemon_document>\n{pokemon_document}\n</pokemon_document>"
-                    ),
-                }
-            ],
-        )
+        try:
+            response = self.llm_client.messages.create(
+                model=EXPLAIN_MODEL,
+                max_tokens=EXPLAIN_MAX_TOKENS,
+                system=EXPLAIN_POKEMON_MATCH_SYSTEM_PROMPT,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": (
+                            f"<search_query>\n{query}\n</search_query>\n\n"
+                            f"<pokemon_document>\n{pokemon_document}\n</pokemon_document>"
+                        ),
+                    }
+                ],
+            )
+        except RateLimitError as error:
+            logger.warning(
+                "Anthropic explanation request was rate-limited.", exc_info=True
+            )
+            raise AIProviderUnavailableError(
+                "The AI explanation service is temporarily unavailable.",
+                retry_after_seconds=self._retry_after_seconds(error),
+            ) from error
+        except AnthropicError as error:
+            logger.exception(
+                "Anthropic explanation request failed (%s).", type(error).__name__
+            )
+            raise AIProviderUnavailableError(
+                "The AI explanation service is temporarily unavailable."
+            ) from error
+
         return response.content[0].text
+
+    @staticmethod
+    def _retry_after_seconds(error: RateLimitError) -> int | None:
+        retry_after = error.response.headers.get("Retry-After")
+        try:
+            return max(1, int(retry_after)) if retry_after else None
+        except ValueError:
+            return None
 
     @staticmethod
     def _cache_key(query: str, pokemon_document: str) -> str:

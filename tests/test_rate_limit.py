@@ -49,6 +49,26 @@ def test_search_endpoint_limit_returns_429_and_retry_after(monkeypatch):
     assert error.value.headers == {"Retry-After": "60"}
 
 
+def test_explain_endpoint_has_a_separate_rate_limit(monkeypatch):
+    monkeypatch.setattr(
+        rate_limit_module,
+        "explain_rate_limiter",
+        SlidingWindowRateLimiter(1, 60),
+    )
+    request = Request({"type": "http", "client": ("127.0.0.1", 1234)})
+
+    rate_limit_module.enforce_explain_rate_limit(request)
+
+    with pytest.raises(HTTPException) as error:
+        rate_limit_module.enforce_explain_rate_limit(request)
+
+    assert error.value.status_code == 429
+    assert (
+        error.value.detail == "Too many explanation requests. Please try again shortly."
+    )
+    assert error.value.headers == {"Retry-After": "60"}
+
+
 def test_limiter_rejects_invalid_configuration():
     for max_requests, window_seconds in ((0, 60), (1, 0)):
         try:
