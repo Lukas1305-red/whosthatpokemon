@@ -64,3 +64,23 @@ def test_explain_pokemon_match_hides_anthropic_failure_details(monkeypatch):
         assert "secret" not in error.message
     else:
         raise AssertionError("Expected a provider failure to be converted safely")
+
+
+def test_explain_pokemon_match_can_be_disabled_without_calling_the_provider(
+    monkeypatch,
+):
+    class Client:
+        def __init__(self):
+            self.messages = self
+
+        def create(self, **kwargs):
+            raise AssertionError("The provider should not be called")
+
+    monkeypatch.setattr(llm_service_module.settings, "llm_enabled", False)
+
+    try:
+        LLMService(Client()).explain_pokemon_match("calm", "Lapras")
+    except AIProviderUnavailableError as error:
+        assert error.message == "AI explanations are temporarily disabled."
+    else:
+        raise AssertionError("Expected explanation requests to be disabled")
