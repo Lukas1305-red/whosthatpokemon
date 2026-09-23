@@ -20,6 +20,9 @@ jobs:
       - name: Install dependencies
         run: uv sync --frozen --all-groups
       - name: Run tests
-        run: PYTHONPATH=. uv run pytest
+        run: make test
+        env:
+          ANTHROPIC_API_KEY: test
+          COHERE_API_KEY: test
       - name: Build deployment image
         run: docker build --tag whosthatpokemon-api:ci .
