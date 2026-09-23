@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     allowed_origins: str = ""
     trusted_hosts: str = ""
     max_request_body_bytes: int = 16 * 1024
+    max_concurrent_requests: int = 20
     log_level: str = "INFO"
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
