@@ -5,6 +5,7 @@ from fastapi import HTTPException
 
 from config import settings
 from dependencies import embedding_client
+from server.api.errors import AIProviderUnavailableError
 from server.api.rate_limit import (
     enforce_cohere_embed_rate_limit,
     enforce_cohere_rerank_rate_limit,
@@ -30,14 +31,26 @@ class PokemonService:
         if candidate_pool < top_k:
             raise ValueError("candidate_pool must be at least top_k")
 
-        enforce_cohere_embed_rate_limit()
-        embedded_query = embedding_client.embed(
-            texts=[query],
-            model=settings.cohere_embedding_model,
-            input_type="search_query",
-            output_dimension=settings.cohere_embedding_dimension,
-            embedding_types=["float"],
-        )
+        try:
+            enforce_cohere_embed_rate_limit()
+            embedded_query = embedding_client.embed(
+                texts=[query],
+                model=settings.cohere_embedding_model,
+                input_type="search_query",
+                output_dimension=settings.cohere_embedding_dimension,
+                embedding_types=["float"],
+            )
+        except HTTPException:
+            # This is our own admission-control decision, so preserve its 429
+            # status and Retry-After header for callers.
+            raise
+        except ApiError as error:
+            logger.exception(
+                "Cohere embedding request failed (status_code=%s).",
+                error.status_code,
+            )
+            raise AIProviderUnavailableError() from error
+
         result = self.repo.search(
             embedded_query.embeddings.float[0], top_k=candidate_pool
         )
@@ -55,11 +68,13 @@ class PokemonService:
             candidate_indices = [item.index for item in reranked.results]
             retrieval = Retrieval(reranked=True)
         except HTTPException as error:
+            if error.status_code != 429:
+                raise
             logger.warning(
                 "Cohere reranking is rate-limited; returning the raw vector ranking.",
                 exc_info=True,
             )
-            candidate_indices = list(range(top_k))
+            candidate_indices = list(range(min(top_k, len(candidate_ids))))
             retry_after = error.headers.get("Retry-After") if error.headers else None
             retrieval = Retrieval(
                 reranked=False,
@@ -71,7 +86,12 @@ class PokemonService:
                 "Cohere reranking failed; returning the raw vector ranking.",
                 exc_info=True,
             )
-            candidate_indices = list(range(top_k))
+            # Authentication and malformed-request failures are persistent
+            # server configuration problems. Do not quietly serve degraded
+            # results forever; fail the request with a safe, retryable error.
+            if 400 <= error.status_code < 500 and error.status_code != 429:
+                raise AIProviderUnavailableError() from error
+            candidate_indices = list(range(min(top_k, len(candidate_ids))))
             retrieval = Retrieval(
                 reranked=False,
                 rerank_unavailable_reason=(
@@ -90,3 +110,6 @@ class PokemonService:
             ],
             retrieval=retrieval,
         )
+
+    def get_pokemon_by_id(self, pokemon_id: str) -> str | None:
+        return self.repo.get_by_id(pokemon_id)

@@ -48,6 +48,11 @@ search_rate_limiter = SlidingWindowRateLimiter(
     window_seconds=settings.search_rate_limit_window_seconds,
 )
 
+explain_rate_limiter = SlidingWindowRateLimiter(
+    max_requests=settings.explain_rate_limit_requests,
+    window_seconds=settings.explain_rate_limit_window_seconds,
+)
+
 cohere_rerank_rate_limiter = SlidingWindowRateLimiter(
     max_requests=settings.cohere_rerank_limit_requests,
     window_seconds=settings.cohere_rerank_limit_window_seconds,
@@ -66,6 +71,17 @@ def enforce_search_rate_limit(request: Request) -> None:
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             detail="Too many search requests. Please try again shortly.",
+            headers={"Retry-After": str(retry_after)},
+        )
+
+
+def enforce_explain_rate_limit(request: Request) -> None:
+    client_host = request.client.host if request.client else "unknown"
+    retry_after = explain_rate_limiter.retry_after_seconds(client_host)
+    if retry_after is not None:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many explanation requests. Please try again shortly.",
             headers={"Retry-After": str(retry_after)},
         )
 

@@ -13,7 +13,9 @@ from evaluation.metrics import (
     ndcg,
     reciprocal_rank,
 )
+from server.api.schemas.pokemon import PokemonTrait
 from server.repositories.pokemon_repository import PokemonRepository
+from server.services.query_builder_service import QueryBuilder
 
 
 def load_cases(path: Path) -> list[dict]:
@@ -21,6 +23,19 @@ def load_cases(path: Path) -> list[dict]:
         cases = json.load(file)
     if not cases:
         raise ValueError(f"No evaluation cases found in {path}")
+
+    query_builder = QueryBuilder()
+    for case in cases:
+        try:
+            traits = [PokemonTrait[trait] for trait in case["traits"]]
+            note = case["note"]
+        except KeyError as error:
+            raise ValueError(
+                f"Evaluation case {case.get('id', '<unknown>')} is missing {error.args[0]!r}"
+            ) from error
+
+        case["query"] = query_builder.build_query(traits, note)
+
     return cases
 
 
