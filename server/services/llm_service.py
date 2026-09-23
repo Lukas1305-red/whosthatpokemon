@@ -8,7 +8,10 @@ from fastapi import HTTPException, status
 from config import settings
 from prompts import EXPLAIN_POKEMON_MATCH_SYSTEM_PROMPT
 from server.api.errors import AIProviderUnavailableError
-from server.services.explanation_cache import ExplanationCache
+from server.services.explanation_cache import (
+    ExplanationCache,
+    ExplanationCacheUnavailableError,
+)
 from server.services.llm_budget import BudgetStoreUnavailableError
 
 EXPLAIN_MODEL = "claude-haiku-4-5-20251001"
@@ -41,10 +44,16 @@ class LLMService:
         if self.explanation_cache is None:
             return self._generate_explanation(query, pokemon_document)
 
-        return self.explanation_cache.get_or_create(
-            self._cache_key(query, pokemon_document),
-            lambda: self._generate_explanation(query, pokemon_document),
-        )
+        try:
+            return self.explanation_cache.get_or_create(
+                self._cache_key(query, pokemon_document),
+                lambda: self._generate_explanation(query, pokemon_document),
+            )
+        except ExplanationCacheUnavailableError as error:
+            logger.exception("Explanation cache is unavailable.")
+            raise AIProviderUnavailableError(
+                "The AI explanation service is temporarily unavailable."
+            ) from error
 
     def _generate_explanation(self, query: str, pokemon_document: str) -> str:
         self._reserve_llm_budget()

@@ -3,8 +3,10 @@
 from datetime import UTC, datetime, timedelta
 from threading import Lock
 
-from redis import Redis
-from redis.exceptions import RedisError
+from server.repositories.redis_repository import (
+    RedisRepository,
+    RedisStoreUnavailableError,
+)
 
 
 class BudgetStoreUnavailableError(Exception):
@@ -34,7 +36,7 @@ class InMemoryDailyLLMBudget:
 
 
 class RedisDailyLLMBudget:
-    def __init__(self, redis: Redis, limit: int) -> None:
+    def __init__(self, redis: RedisRepository, limit: int) -> None:
         if limit < 1:
             raise ValueError("limit must be at least 1")
         self.redis = redis
@@ -45,11 +47,8 @@ class RedisDailyLLMBudget:
         retry_after = _seconds_until_next_utc_day(now)
         key = f"pokemon-finder:explain-budget:{now.date().isoformat()}"
         try:
-            pipeline = self.redis.pipeline(transaction=True)
-            pipeline.incr(key)
-            pipeline.expire(key, retry_after, nx=True)
-            used, _ = pipeline.execute()
-        except RedisError as error:
+            used = self.redis.increment_with_expiry(key, retry_after)
+        except RedisStoreUnavailableError as error:
             raise BudgetStoreUnavailableError() from error
 
         return retry_after if used > self.limit else None

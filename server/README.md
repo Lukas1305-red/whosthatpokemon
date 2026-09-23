@@ -55,8 +55,9 @@ Configure these through your hosting provider's encrypted environment secrets:
 - `LLM_ENABLED`: set to `false` to immediately disable all paid explanation
   calls while leaving search available.
 - `EXPLAIN_DAILY_LLM_BUDGET`: defaults to 25 paid cache-miss explanations per
-  UTC day. Docker Compose provides Redis to preserve this counter through API
-  restarts. Set `REDIS_URL` to a managed Redis endpoint for hosted deployment.
+  UTC day. Docker Compose provides Redis to preserve this counter and share
+  cached explanations between API instances. Set `REDIS_URL` to a managed Redis
+  endpoint for hosted deployment.
 
 Use `/health` for liveness and `/ready` for readiness. Readiness checks only
 the local Chroma index, so health probes never create paid provider calls.

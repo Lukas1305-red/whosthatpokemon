@@ -6,6 +6,11 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from threading import Lock
 
+from server.repositories.redis_repository import (
+    RedisRepository,
+    RedisStoreUnavailableError,
+)
+
 
 @dataclass
 class _KeyLock:
@@ -92,3 +97,38 @@ class ExplanationCache:
             key_lock.users -= 1
             if key_lock.users == 0 and self._key_locks.get(key) is key_lock:
                 del self._key_locks[key]
+
+
+class ExplanationCacheUnavailableError(Exception):
+    """The shared explanation cache cannot safely serve a request."""
+
+
+class RedisExplanationCache:
+    """Shared TTL cache for generated explanations.
+
+    Redis enforces the TTL; its deployment configuration governs memory limits.
+    Unlike ``ExplanationCache``, this does not coalesce concurrent cache misses
+    across API processes.
+    """
+
+    def __init__(self, redis: RedisRepository, ttl_seconds: int) -> None:
+        if ttl_seconds <= 0:
+            raise ValueError("ttl_seconds must be greater than 0")
+        self.redis = redis
+        self.ttl_seconds = ttl_seconds
+
+    def get_or_create(self, key: str, create: Callable[[], str]) -> str:
+        try:
+            cached = self.redis.get(key)
+        except RedisStoreUnavailableError as error:
+            raise ExplanationCacheUnavailableError() from error
+
+        if cached is not None:
+            return cached
+
+        value = create()
+        try:
+            self.redis.set_with_ttl(key, value, self.ttl_seconds)
+        except RedisStoreUnavailableError as error:
+            raise ExplanationCacheUnavailableError() from error
+        return value
