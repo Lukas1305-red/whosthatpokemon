@@ -33,7 +33,7 @@ def test_embedding_provider_failure_returns_safe_503_response(monkeypatch):
         get_query_builder: QueryBuilder,
     }
     try:
-        with TestClient(app) as client:
+        with TestClient(app, base_url="http://localhost") as client:
             response = client.post("/search", json={"traits": ["calm"]})
     finally:
         app.dependency_overrides = {}

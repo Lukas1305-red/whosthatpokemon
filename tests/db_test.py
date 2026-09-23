@@ -1,43 +1,64 @@
-from config import settings
-from dependencies import chroma_db_client, embedding_client
-
-COLLECTION_NAME = "pokemon"
+from server.repositories.pokemon_repository import PokemonRepository
 
 
-def test_pokemon_database():
-    chroma_db_client.heartbeat()
-    collection = chroma_db_client.get_collection(COLLECTION_NAME)
+class FakeCollection:
+    def __init__(self) -> None:
+        self.query_calls: list[dict] = []
+        self.get_calls: list[dict] = []
+        self.query_result = {
+            "ids": [["25"]],
+            "documents": [["Pikachu: quick and friendly."]],
+            "metadatas": [[{"name": "Pikachu"}]],
+        }
+        self.get_result = {
+            "ids": ["25"],
+            "documents": ["Pikachu: quick and friendly."],
+        }
 
-    assert collection.count() == 1024
+    def query(self, **kwargs):
+        self.query_calls.append(kwargs)
+        return self.query_result
 
-    results = collection.get(
-        limit=5,
-        include=["documents", "metadatas"],
-    )
-
-    assert len(results["documents"]) == 5
-    assert len(results["metadatas"]) == 5
+    def get(self, **kwargs):
+        self.get_calls.append(kwargs)
+        return self.get_result
 
 
-def test_chroma_is_alive():
-    assert chroma_db_client.heartbeat() is not None
+class FakeChromaClient:
+    def __init__(self, collection: FakeCollection) -> None:
+        self.collection = collection
+        self.collection_names: list[str] = []
+
+    def get_collection(self, name: str) -> FakeCollection:
+        self.collection_names.append(name)
+        return self.collection
 
 
-def test_chroma_can_query():
-    collection = chroma_db_client.get_collection("pokemon")
+def test_pokemon_repository_searches_the_pokemon_collection():
+    collection = FakeCollection()
+    repository = PokemonRepository(FakeChromaClient(collection))
 
-    response = embedding_client.embed(
-        texts=["a fast and powerful fighter"],
-        model=settings.cohere_embedding_model,
-        input_type="search_query",
-        output_dimension=settings.cohere_embedding_dimension,
-        embedding_types=["float"],
-    )
+    result = repository.search([0.1, 0.2], top_k=5)
 
-    results = collection.query(
-        query_embeddings=[response.embeddings.float[0]],
-        n_results=1,
-    )
+    assert result == collection.query_result
+    assert collection.query_calls == [
+        {"query_embeddings": [[0.1, 0.2]], "n_results": 5}
+    ]
 
-    assert len(results["ids"]) == 1
-    assert len(results["ids"][0]) == 1
+
+def test_pokemon_repository_returns_a_document_for_a_known_id():
+    collection = FakeCollection()
+    repository = PokemonRepository(FakeChromaClient(collection))
+
+    result = repository.get_by_id("25")
+
+    assert result == "Pikachu: quick and friendly."
+    assert collection.get_calls == [{"ids": ["25"], "include": ["documents"]}]
+
+
+def test_pokemon_repository_returns_none_for_an_unknown_id():
+    collection = FakeCollection()
+    collection.get_result = {"ids": [], "documents": []}
+    repository = PokemonRepository(FakeChromaClient(collection))
+
+    assert repository.get_by_id("missing") is None

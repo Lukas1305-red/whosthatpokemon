@@ -12,4 +12,4 @@ anthropic_client = Anthropic(
     max_retries=settings.anthropic_max_retries,
 )
 embedding_client = ClientV2(api_key=settings.cohere_api_key)
-chroma_db_client = chromadb.PersistentClient(path="data/chroma")
+chroma_db_client = chromadb.PersistentClient(path=settings.chroma_data_path)
