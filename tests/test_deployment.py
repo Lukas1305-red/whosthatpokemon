@@ -20,7 +20,7 @@ def test_deployment_settings_parse_comma_separated_origins_and_hosts():
 
 
 def test_health_endpoint_is_live_without_checking_dependencies():
-    with TestClient(main_module.app) as client:
+    with TestClient(main_module.app, base_url="http://localhost") as client:
         response = client.get("/health")
 
     assert response.status_code == 200
@@ -38,7 +38,7 @@ def test_readiness_endpoint_checks_the_chroma_collection(monkeypatch):
 
     monkeypatch.setattr(main_module, "chroma_db_client", ChromaClient())
 
-    with TestClient(main_module.app) as client:
+    with TestClient(main_module.app, base_url="http://localhost") as client:
         response = client.get("/ready")
 
     assert response.status_code == 200

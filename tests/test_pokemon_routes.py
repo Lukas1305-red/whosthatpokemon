@@ -40,7 +40,7 @@ def test_explain_endpoint_returns_an_llm_explanation():
         get_llm_service: LLMService,
     }
     try:
-        with TestClient(app) as client:
+        with TestClient(app, base_url="http://localhost") as client:
             response = client.request(
                 "POST",
                 "/explain",
@@ -93,7 +93,7 @@ def test_search_endpoint_returns_results_and_the_rerank_retry_header(monkeypatch
         get_query_builder: QueryBuilder,
     }
     try:
-        with TestClient(app) as client:
+        with TestClient(app, base_url="http://localhost") as client:
             response = client.post(
                 "/search",
                 json={"traits": ["calm", "protective"]},
