@@ -1,4 +1,4 @@
-.PHONY: install fetch enrich populate pipeline lint test evaluate server
+.PHONY: install fetch enrich populate pipeline lint test evaluate server docker
 
 EVAL_SUITE ?= retrieval
 
@@ -27,3 +27,6 @@ evaluate:
 
 server:
 	uv run uvicorn server.main:app --reload
+
+docker:
+	docker compose up --build

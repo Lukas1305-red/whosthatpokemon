@@ -1,0 +1,32 @@
+services:
+  api:
+    build: .
+    env_file: .env
+    environment:
+      CHROMA_DATA_PATH: /app/data/chroma
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "${HOST_PORT:-8000}:8000"
+    volumes:
+      # The prebuilt, read-only-for-the-app Pokémon index is intentionally
+      # supplied at runtime rather than committed to source control.
+      - ./data:/app/data
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  redis-data:
