@@ -99,8 +99,8 @@ daily LLM budget or calling Anthropic.
 
 ## Run with Docker
 
-Docker Compose starts the API and Redis. It mounts your local `data/` directory,
-which must contain the generated Chroma index.
+Docker Compose starts the Next.js client, API, and Redis. It mounts your local
+`data/` directory, which must contain the generated Chroma index.
 
 ```sh
 cp .env.example .env
@@ -108,8 +108,12 @@ cp .env.example .env
 docker compose up --build
 ```
 
-The API is then available at `http://localhost:8000`. In this mode Redis stores
-the daily explanation budget and shared, TTL-based explanation responses.
+Open the app at `http://localhost:3000`; the API and its interactive docs remain
+available at `http://localhost:8000`. Set `CLIENT_HOST_PORT` or `HOST_PORT` in
+your environment to use different host ports. In this mode Redis stores the daily
+explanation budget and shared, TTL-based explanation responses. The Next.js
+container reaches the API over Docker's private `api` network address, so
+`POKEMON_API_BASE_URL` needs no local configuration for Compose.
 
 ## Configuration
 

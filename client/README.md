@@ -69,3 +69,10 @@ code to a `shared/` module only after two features genuinely need it.
 Copy `.env.example` to `.env.local` and set `POKEMON_API_BASE_URL` for the Python
 service. This variable intentionally does not use the `NEXT_PUBLIC_` prefix, so it
 cannot be included in the browser bundle.
+
+## Docker
+
+From the repository root, run `docker compose up --build`. The client is then
+available at `http://localhost:3000`. Its Server Actions use the internal
+`http://api:8000` Compose address, so no client environment file is needed for
+this setup. Set `CLIENT_HOST_PORT` to publish the client on a different host port.
