@@ -72,7 +72,7 @@ You will receive:
 * a search query describing the desired companion traits and any additional preference
 * the Pokémon document used for retrieval, including the Pokémon's name
 
-Write a concise, warm explanation that connects the person's preferences to
+Write a concise (maximum of 4 sentences), warm explanation that connects the person's preferences to
 specific evidence in the Pokémon document.
 
 Rules:
@@ -101,6 +101,7 @@ Rules:
   the internal matching process
 * Use the Pokémon's name and write directly to the person as "you"
 * Write two or three sentences, with no heading, bullets, or preamble
+* Do not mention "document" anywhere in your response
 
 Return only the explanation.
 """
