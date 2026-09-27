@@ -339,6 +339,9 @@ export function PokemonFinder() {
               <Button type="button" variant="ghost" size="icon-xs" onClick={() => setShowInfo(false)} aria-label="Close project information">×</Button>
             </div>
             <p className="mt-4 text-xs leading-5 text-muted-foreground">Explanations use a limited service, so they are requested only when you open a result.</p>
+            <p className="mt-3 text-xs leading-5 text-muted-foreground">
+              Pokémon data from <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-foreground">PokéAPI</a>; sprites from its <a href="https://github.com/PokeAPI/sprites" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-foreground">sprite repository</a>. Pokémon artwork and characters belong to their respective rights holders. This fan project is not affiliated with or endorsed by them.
+            </p>
           </section>
         </div>
       ) : null}

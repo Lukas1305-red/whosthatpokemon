@@ -84,10 +84,6 @@ and [server README](server/README.md) for implementation details.
 - Persist `data/chroma` and Redis data in a hosted deployment. The embedded
   Chroma index is designed here for one API instance.
 
-_Deployment placeholder: Add the public domain, hosting setup, and a link to a
-step-by-step deployment guide after the first deployment. Document how the
-untracked `data/chroma` directory reaches the server and how HTTPS is configured._
-
 ## Development and tests
 
 ```sh
@@ -101,5 +97,15 @@ images. The [evaluation README](evaluation/README.md) explains the retrieval
 experiments; the [client README](client/README.md) explains the UI boundaries;
 and the [server README](server/README.md) covers the API and runtime settings.
 
-<!-- TODO before publishing: add data/sprite attribution and, if you want to
-permit reuse of the source code, choose and add a LICENSE file. -->
+## Credits and license
+
+Pokémon data comes from [PokéAPI](https://pokeapi.co/), created by Paul Hallett
+and its contributors. Pokémon sprites are served from the
+[PokéAPI sprites repository](https://github.com/PokeAPI/sprites). Pokémon names,
+characters, and artwork belong to their respective rights holders, including
+The Pokémon Company. This is an independent fan project and is not affiliated
+with or endorsed by PokéAPI, Nintendo, Game Freak, or The Pokémon Company.
+
+The original code and documentation in this repository are available under the
+[MIT License](LICENSE). That license does not grant rights to third-party
+Pokémon data, sprites, or other artwork.
