@@ -1,162 +1,105 @@
+<p align="center">
+  <img src="client/public/pokeMatcherIcon.png" alt="Who's That Pokémon? logo" width="120" />
+</p>
+
 # Who's That Pokémon?
 
-![image](assets/SystemDesign_Pokemon.png)
+Find a Pokémon that fits your personality. Choose traits such as **calm** or
+**curious**, add an optional note, and explore five ranked matches. Open a result
+to get a short explanation of why it fits.
 
-An API that recommends Pokémon based on personal traits. Send qualities such as
-`calm`, `protective`, or `curious`; the service searches a semantically enriched
-Pokémon collection and can explain why a chosen result is a good fit.
+![Pokémon match demo](assets/pokemon-match-demo.gif)
 
-The project is a Python 3.13 / FastAPI backend. It uses Cohere for embeddings
-and default reranking, Chroma for vector search, Anthropic for optional
-explanations, and Redis for shared cache and daily LLM-spend protection.
+## Why I built it
 
-## What happens in a request
+As Pokémon celebrates its 30th anniversary, choosing a companion from more than 1,000 creatures can feel overwhelming. I built Pokémon Match Maker to make that choice more personal: select up to four traits, add an optional note, and get five ranked matches. The app uses semantic search to find them and an LLM to explain why each one might fit.
+
+## How it works
 
 ```text
-POST /search
+Traits + optional note
   → query builder → Cohere embedding → Chroma candidate search
-  → Cohere rerank (top 25 candidates → top 5 results)
-
-POST /explain
-  → explanation cache → daily LLM budget → Anthropic (on a cache miss)
+  → Cohere reranking (25 candidates → 5 results)
+  → optional explanation from Anthropic, cached in Redis
 ```
 
-Reranking is the standard search path. If Cohere reranking is temporarily
-rate-limited or has a retryable failure, the API returns the original vector
-ranking and reports that in the response metadata.
+The UI is a Next.js app. Its server actions call a FastAPI service, so provider
+keys stay on the server. The API uses Redis for shared explanation caching and a
+daily limit on paid explanation requests. If reranking is temporarily unavailable,
+search still returns the original vector ranking.
 
-## Prerequisites
+![System design for the Pokémon matcher](assets/SystemDesign_Pokemon.png)
 
-- Python 3.13+
-- [uv](https://docs.astral.sh/uv/)
-- Cohere and Anthropic API keys
-- Docker Desktop, if you want to use the Compose deployment
+## What I measured
 
-## Get started locally
+On a 50-query, project-specific evaluation set, reranking 25 candidates improved
+Recall@5 from **0.76 to 0.90** and nDCG@5 from **0.46 to 0.62**, while median
+request latency rose from **0.32 s to 0.74 s**. These are measurements of this
+evaluation set, not a claim about every possible query. The cases, labeling
+scheme, method, and other results are in the [evaluation README](evaluation/README.md).
 
-1. Install dependencies and create your local environment file.
+## Run it locally
+
+You need Python 3.13+, [uv](https://docs.astral.sh/uv/), Docker with Compose, and
+Cohere and Anthropic API keys. Building the search index calls Cohere and may
+incur provider charges.
+
+1. Create `.env` from the example and add your provider keys:
+
+   ```sh
+   cp .env.example .env
+   # Set ANTHROPIC_API_KEY and COHERE_API_KEY in .env.
+   ```
+
+2. Generate the Chroma index. It lives in `data/chroma` and is not committed to Git:
 
    ```sh
    make install
-   cp .env.example .env
-   ```
-
-2. Add your provider credentials to `.env`.
-
-   ```dotenv
-   ANTHROPIC_API_KEY=your-key
-   COHERE_API_KEY=your-key
-   ```
-
-3. Build the local Chroma index. This fetches Pokémon source data, enriches it,
-   and creates embeddings, so it requires your provider credentials and may
-   incur API usage.
-
-   ```sh
    make pipeline
    ```
 
-4. Start the API.
+3. Start the website, API, and Redis:
 
    ```sh
-   make server
+   docker compose up --build
    ```
 
-Open [http://localhost:8000/docs](http://localhost:8000/docs) for interactive
-API documentation. Use `http://localhost:8000/health` to confirm that the
-server is running.
+Open **http://localhost:3000** for the website. The API documentation is at
+**http://localhost:8000/docs**. The API's `/ready` endpoint checks that the
+search index is available without calling a paid provider.
 
-## Try the API
+For API-only development, run `make server`. For client development outside
+Docker, install [Bun](https://bun.sh/), run `cd client && bun install`, then use
+`make dev` from the repository root. See the [client README](client/README.md)
+and [server README](server/README.md) for implementation details.
 
-Search for suitable Pokémon:
+## Configuration and deployment
 
-```sh
-curl -X POST http://localhost:8000/search \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "traits": ["calm", "protective"],
-    "note": "For a quiet home."
-  }'
-```
+- Keep `.env` and provider keys out of Git. See [.env.example](.env.example) for
+  the main settings.
+- Set `TRUSTED_HOSTS` for the hosts that reach FastAPI. Set `ALLOWED_ORIGINS` if
+  browsers call the API directly; the included Next.js app calls it server-side.
+- Set `LLM_ENABLED=false` to turn off paid explanations while keeping search
+  available. `EXPLAIN_DAILY_LLM_BUDGET` limits paid explanation cache misses.
+- Persist `data/chroma` and Redis data in a hosted deployment. The embedded
+  Chroma index is designed here for one API instance.
 
-Use an ID from the search response to request an explanation:
+_Deployment placeholder: Add the public domain, hosting setup, and a link to a
+step-by-step deployment guide after the first deployment. Document how the
+untracked `data/chroma` directory reaches the server and how HTTPS is configured._
 
-```sh
-curl -X POST http://localhost:8000/explain \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "searchRequest": {
-      "traits": ["calm", "protective"],
-      "note": "For a quiet home."
-    },
-    "pokemon_id": "131"
-  }'
-```
-
-Valid traits are `reliable`, `independent`, `calm`, `curious`, `protective`,
-and `adaptable`. An explanation cache hit returns immediately without consuming
-daily LLM budget or calling Anthropic.
-
-## Run with Docker
-
-Docker Compose starts the Next.js client, API, and Redis. It mounts your local
-`data/` directory, which must contain the generated Chroma index.
+## Development and tests
 
 ```sh
-cp .env.example .env
-# Add ANTHROPIC_API_KEY and COHERE_API_KEY to .env.
-docker compose up --build
-```
-
-Open the app at `http://localhost:3000`; the API and its interactive docs remain
-available at `http://localhost:8000`. Set `CLIENT_HOST_PORT` or `HOST_PORT` in
-your environment to use different host ports. In this mode Redis stores the daily
-explanation budget and shared, TTL-based explanation responses. The Next.js
-container reaches the API over Docker's private `api` network address, so
-`POKEMON_API_BASE_URL` needs no local configuration for Compose.
-
-## Configuration
-
-Copy `.env.example` and adjust values for your environment. The most useful
-settings are:
-
-- `ANTHROPIC_API_KEY`, `COHERE_API_KEY`: required provider credentials.
-- `TRUSTED_HOSTS`: comma-separated allowed request hosts. Local defaults are
-  `localhost,127.0.0.1`.
-- `ALLOWED_ORIGINS`: comma-separated browser origins allowed by CORS.
-- `LLM_ENABLED`: set to `false` to disable paid explanation generation while
-  keeping search available.
-- `EXPLAIN_DAILY_LLM_BUDGET`: maximum number of cache-miss explanations per
-  UTC day.
-- `EXPLAIN_CACHE_TTL_SECONDS`: explanation-cache lifetime; defaults to one day.
-- `REDIS_URL`: enables Redis-backed cache and budget storage outside Compose.
-
-For a public deployment, set explicit hosts and origins, terminate HTTPS at the
-edge, persist `data/chroma`, and use a managed Redis service. The embedded
-Chroma index is intended for a single API instance; move it to a server-backed
-vector store before adding replicas.
-
-## Project layout
-
-```text
-server/
-  api/            FastAPI routes, schemas, dependency wiring, and rate limits
-  services/       Query building, search orchestration, caching, LLM budget
-  repositories/   Chroma and Redis access
-scripts/          Data fetch, enrichment, and Chroma-index generation
-evaluation/       Retrieval evaluation suite and methodology
-tests/            API, service, cache, budget, and deployment tests
-```
-
-## Development commands
-
-```sh
-make test                         # Run the test suite
-make lint                         # Run pre-commit checks
+make test                         # Python tests
+make lint                         # Python and client lint checks
 make evaluate EVAL_ARGS="--strategies raw,rerank"
-make evaluate EVAL_SUITE=candidate_pools
 ```
 
-See [server/README.md](server/README.md) for deployment-specific details and
-[evaluation/README.md](evaluation/README.md) for retrieval quality results and
-evaluation commands.
+GitHub Actions runs tests, builds the Next.js client, and builds both deployment
+images. The [evaluation README](evaluation/README.md) explains the retrieval
+experiments; the [client README](client/README.md) explains the UI boundaries;
+and the [server README](server/README.md) covers the API and runtime settings.
+
+<!-- TODO before publishing: add data/sprite attribution and, if you want to
+permit reuse of the source code, choose and add a LICENSE file. -->
