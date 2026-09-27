@@ -8,7 +8,9 @@ RUN bun install --frozen-lockfile
 COPY . .
 RUN bun run build
 
-FROM node:22-alpine AS runner
+# Pin Alpine 3.23: the current `22-alpine` tag resolves to Alpine 3.24,
+# whose arm64 image is not executable on the affected Docker Desktop setup.
+FROM node:22-alpine3.23 AS runner
 
 WORKDIR /app
 ENV NODE_ENV=production \
