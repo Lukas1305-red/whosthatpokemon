@@ -34,5 +34,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: test
           COHERE_API_KEY: test
-      - name: Build deployment image
+      - name: Build API deployment image
         run: docker build --tag whosthatpokemon-api:ci .
+      - name: Build client deployment image
+        run: docker build --tag whosthatpokemon-client:ci ./client
