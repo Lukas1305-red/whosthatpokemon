@@ -20,7 +20,16 @@ export function useRetryCountdown() {
 
   useEffect(() => {
     if (retryAt === null) return;
-    const interval = window.setInterval(() => setNow(Date.now()), 1_000);
+    const interval = window.setInterval(() => {
+      const currentTime = Date.now();
+      if (currentTime >= retryAt) {
+        window.clearInterval(interval);
+        setRetryAt(null);
+        setNow(null);
+        return;
+      }
+      setNow(currentTime);
+    }, 1_000);
     return () => window.clearInterval(interval);
   }, [retryAt]);
 
