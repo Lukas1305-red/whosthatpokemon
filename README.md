@@ -30,14 +30,6 @@ search still returns the original vector ranking.
 
 ![System design for the Pokémon matcher](assets/SystemDesign_Pokemon.png)
 
-## What I measured
-
-On a 50-query, project-specific evaluation set, reranking 25 candidates improved
-Recall@5 from **0.76 to 0.90** and nDCG@5 from **0.46 to 0.62**, while median
-request latency rose from **0.32 s to 0.74 s**. These are measurements of this
-evaluation set, not a claim about every possible query. The cases, labeling
-scheme, method, and other results are in the [evaluation README](evaluation/README.md).
-
 ## Run it locally
 
 You need Python 3.13+, [uv](https://docs.astral.sh/uv/), Docker with Compose, and
@@ -89,13 +81,11 @@ and [server README](server/README.md) for implementation details.
 ```sh
 make test                         # Python tests
 make lint                         # Python and client lint checks
-make evaluate EVAL_ARGS="--strategies raw,rerank"
 ```
 
 GitHub Actions runs tests, builds the Next.js client, and builds both deployment
-images. The [evaluation README](evaluation/README.md) explains the retrieval
-experiments; the [client README](client/README.md) explains the UI boundaries;
-and the [server README](server/README.md) covers the API and runtime settings.
+images. The [client README](client/README.md) explains the UI boundaries, and
+the [server README](server/README.md) covers the API and runtime settings.
 
 ## Credits and license
 
